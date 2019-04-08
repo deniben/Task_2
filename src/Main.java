@@ -14,6 +14,7 @@ public class Main {
             if(!(scc.hasNextInt())){
                 System.out.println("That not a number!");
                 scc.next(); // this is important!
+                continue;
             }
             number = scc.nextInt();
             String str = check(number, rand);
