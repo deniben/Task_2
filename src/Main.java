@@ -1,52 +1,50 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.rmi.server.ExportException;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+    private final static int MAX_NUMBER = 100;
 
-    public static void main(String[] args) {
-        boolean bool = true;
-        Random random = new Random();
-        int rand = random.nextInt(100);//generate random number
-        System.out.println("Загадано число от 0 до 100, угадаешь?\nВводи:");
-        while (bool) { //Generating randInt
-            Scanner scc = new Scanner(System.in);
-            int number;
-            if(!(scc.hasNextInt())){
-                System.out.println("That not a number!");
-                scc.next(); // this is important!
-                continue;
-            }
-            number = scc.nextInt();
-            String str = check(number, rand);
-            System.out.println(str);
-            if (str.equals("Угадал!")) { //Condition if won
-                System.out.println(str + "\nЗагаданное: " + rand);
-                System.out.println("Еще раз? напиши 'Yes', если нет, то 'No'");
-                Scanner in = new Scanner(System.in);
-                String phrase = in.nextLine();
-                switch (phrase) {
-                    case ("Yes"):
-                        bool = true;
-                        System.out.println("Вводи:");
-                        continue;
-                    case ("No"):
-                        bool = false;
-                        break;
-                }
-            }
+    private static Random rnd = new Random();
+    private static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+    public static void main(String[] args) throws IOException {
+        while (true) { //Generating randInt
+            newint();
+            System.out.println("Съиграем еще раз? (y/N)");
+            String line = input.readLine();
+            if( !line.equalsIgnoreCase("Y") )
+                break;
         }
     }
 
-    public static String check(int number, int rand) { //method which checked validation number according to rand
-        if (number < 0 || number > 100) {
-            return "Число не попало в диапазон";
-        } else if (number > rand) {
-            return "Меньше!";
-        } else if (number < rand) {
-            return "Больше!";
-        } else if (number == rand) {
-            return "Угадал!";
+    private static void newint() {
+        int rand = rnd.nextInt(MAX_NUMBER);//generate random number
+        System.out.println("Загадано число от 0 до 100, угадаешь?\nВводи:");
+
+        while(true) {
+            try {
+                String line = input.readLine();
+                if (line.isEmpty()) {
+                    continue;
+                }
+                int number = Integer.parseInt(line);
+                if (number > rand) {
+                    System.out.println("Меньше!");
+                } else if (number < rand) {
+                    System.out.println("Больше!");
+                } else if (number == rand) {
+                    System.out.println("Угадал!");
+                    break;
+                } else {
+                    System.out.println("Число не попало в диапазон от 0 до " + MAX_NUMBER);
+                }
+            } catch (Exception e){
+                System.out.println("Это не число, попробуй еще раз");
+            }
         }
-        return "Nothing";
     }
 }
